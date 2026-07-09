@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --farm-green: #1b4332;
+  --farm-gold: #c9a227;
+  --farm-orange: #d97706;
+}
+
+body {
+  color: #1a1a1a;
+  background: #fafaf7;
+}
