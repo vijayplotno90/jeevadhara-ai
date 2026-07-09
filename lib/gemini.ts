@@ -4,12 +4,30 @@ import { logAgentDecision } from "./agentLog";
 // Vertex AI (Gemini) — this single integration satisfies both hackathon
 // hard requirements at once: (1) "at least one Google Cloud product" and
 // (2) "at least one Gemini API call in the deployed application."
+//
+// Credentials: on Vercel there's no persistent filesystem to point
+// GOOGLE_APPLICATION_CREDENTIALS at a key file, so we accept the service
+// account JSON directly via GCP_SERVICE_ACCOUNT_JSON (paste the whole key
+// file content as one env var). Locally, GOOGLE_APPLICATION_CREDENTIALS
+// (a file path) still works as a fallback via Application Default
+// Credentials, so `gcloud auth application-default login` works too.
+const credentials = process.env.GCP_SERVICE_ACCOUNT_JSON
+  ? JSON.parse(process.env.GCP_SERVICE_ACCOUNT_JSON)
+  : undefined;
+
 const vertexAI = new VertexAI({
   project: process.env.GCP_PROJECT_ID!,
   location: process.env.GCP_LOCATION || "us-central1",
+  googleAuthOptions: credentials ? { credentials } : undefined,
 });
 
-const model = vertexAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+// NOTE ON MODEL ID: verify this against the Vertex AI Model Garden console
+// before relying on it -- Gemini model names churn fast (gemini-1.5-flash,
+// used here originally on 2026-07-10, was already fully shut down/404 by
+// the time this was caught the same day). gemini-2.5-flash is the current
+// stable GA choice as of this writing; re-check before the demo video is
+// recorded in case it's moved again by August.
+const model = vertexAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 /**
  * Agent 1 — Crop Advisory.
