@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Jeevadhara — AI-Operated Farmer Marketplace",
@@ -14,7 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-body">{children}</body>
+      <body className="font-body">
+        <Header />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
