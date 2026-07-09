@@ -1,9 +1,10 @@
 # Jeevadhara — Build with Gemini XPRIZE
 
-AI-operated farmer-to-consumer marketplace. Pilot: Solipeta village, Telangana.
-Built fresh for the [Build with Gemini XPRIZE](https://xprize.devpost.com) — Small Business
-Services category. See `XPRIZE_RULES.md` for the compliance checklist and `DISCLOSURE.md`
-for what is/isn't reused from prior work.
+Gemini-powered agricultural marketplace for Indian smallholder farmers. AI agents for crop
+advisory, price recommendation, and listing optimization — piloting from Solipeta village,
+Telangana. Built fresh for the [Build with Gemini XPRIZE](https://xprize.devpost.com) — Small
+Business Services category. See `XPRIZE_RULES.md` for the compliance checklist and
+`DISCLOSURE.md` for what is/isn't reused from prior work.
 
 ## Stack
 - Next.js 14 (App Router) + TypeScript + Tailwind
