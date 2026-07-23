@@ -3,7 +3,7 @@ import { Sprout } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/marketplace", label: "Marketplace" },
-  { href: "/marketplace?category=produce", label: "Sell Produce" },
+  { href: "/farmer/list", label: "Sell Produce" },
   { href: "/auth", label: "Login" },
 ];
 

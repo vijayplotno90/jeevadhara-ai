@@ -12,11 +12,12 @@ export async function logAgentDecision(params: {
   input: Record<string, unknown>;
   output: Record<string, unknown>;
   farmerOverride?: boolean;
-}) {
+}): Promise<string> {
   const db = getDb();
-  await db.query(
+  const result = await db.query(
     `INSERT INTO agent_logs (agent_name, farmer_id, input, output, farmer_override, created_at)
-     VALUES ($1, $2, $3, $4, $5, now())`,
+     VALUES ($1, $2, $3, $4, $5, now())
+     RETURNING id`,
     [
       params.agentName,
       params.farmerId,
@@ -25,4 +26,18 @@ export async function logAgentDecision(params: {
       params.farmerOverride ?? null,
     ]
   );
+  return result.rows[0].id;
+}
+
+/**
+ * Called once the farmer actually accepts or overrides an agent's suggestion
+ * at listing time. This is what makes the override-vs-accept rate real
+ * evidence instead of a number nobody ever sets.
+ */
+export async function markAgentOverride(logId: string, wasOverridden: boolean) {
+  const db = getDb();
+  await db.query(`UPDATE agent_logs SET farmer_override = $2 WHERE id = $1`, [
+    logId,
+    wasOverridden,
+  ]);
 }

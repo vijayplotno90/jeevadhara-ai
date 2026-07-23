@@ -50,14 +50,14 @@ irrigation timing, be specific to Telangana growing conditions.`;
   const result = await model.generateContent(prompt);
   const output = result.response.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 
-  await logAgentDecision({
+  const logId = await logAgentDecision({
     agentName: "crop_advisory",
     farmerId: params.farmerId,
     input: { question: params.question, cropContext: params.cropContext },
     output: { answer: output },
   });
 
-  return output;
+  return { answer: output, logId };
 }
 
 /**
@@ -93,14 +93,14 @@ category (one of: produce, livestock, honey, nursery, tools, vehicles), suggeste
   const raw = result.response.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
   const parsed = safeJsonParse(raw);
 
-  await logAgentDecision({
+  const logId = await logAgentDecision({
     agentName: "listing_optimization",
     farmerId: params.farmerId,
     input: { farmerNote: params.farmerNote },
     output: parsed,
   });
 
-  return parsed;
+  return { ...parsed, logId };
 }
 
 /**
@@ -127,14 +127,14 @@ below mandi rate). Respond in strict JSON: { "recommended_price": number, "reaso
   const raw = result.response.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
   const parsed = safeJsonParse(raw);
 
-  await logAgentDecision({
+  const logId = await logAgentDecision({
     agentName: "price_recommendation",
     farmerId: params.farmerId,
     input: { productName: params.productName, recentMandiRates: params.recentMandiRates },
     output: parsed,
   });
 
-  return parsed;
+  return { ...parsed, logId };
 }
 
 function safeJsonParse(text: string) {
