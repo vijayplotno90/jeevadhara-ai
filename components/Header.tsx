@@ -6,6 +6,8 @@ const NAV_LINKS = [
   { href: "/mandi-rates", label: "Mandi Rates" },
   { href: "/egg-prices", label: "Egg Prices" },
   { href: "/jankari", label: "Expert Desk" },
+  { href: "/services", label: "Service Hub" },
+  { href: "/web-stories", label: "Web Stories" },
   { href: "/farmer/list", label: "Sell Produce" },
   { href: "/auth", label: "Login" },
 ];
