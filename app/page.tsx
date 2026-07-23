@@ -63,7 +63,12 @@ export default function HomePage() {
 
           <div className="relative hidden md:block">
             <div className="absolute -inset-4 -z-10 rounded-3xl bg-gradient-to-br from-green-100 to-amber-100 blur-2xl" />
-            <div className="aspect-[4/3] w-full rounded-3xl bg-gradient-to-br from-farm-green to-emerald-800 shadow-glow" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://loremflickr.com/800/600/indianfarmer,harvest"
+              alt="Farmer harvesting produce"
+              className="aspect-[4/3] w-full rounded-3xl object-cover shadow-glow"
+            />
             <div className="absolute -bottom-6 -left-6 rounded-2xl border border-gray-200 bg-white p-4 shadow-card">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 text-green-700">
