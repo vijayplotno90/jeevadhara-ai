@@ -87,14 +87,59 @@ CREATE TABLE testimonials (
 );
 
 -- === Reference data ===
+-- Widened to match the standard Agmarknet min/modal/max structure (this is
+-- India's own public mandi-data schema, not proprietary to any project) --
+-- min_price/max_price added so the price recommendation agent has a real
+-- range to reason over instead of a single point price.
 CREATE TABLE mandi_rates (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   commodity TEXT NOT NULL,
+  commodity_telugu TEXT,
+  district TEXT NOT NULL,
   market TEXT NOT NULL,
-  price_per_unit NUMERIC(10,2) NOT NULL,
+  min_price NUMERIC(10,2) NOT NULL,
+  modal_price NUMERIC(10,2) NOT NULL,
+  max_price NUMERIC(10,2) NOT NULL,
   unit TEXT NOT NULL DEFAULT 'per quintal',
   rate_date DATE NOT NULL,
-  source TEXT NOT NULL DEFAULT 'data.gov.in Agmarknet'
+  source TEXT NOT NULL DEFAULT 'Telangana State Agricultural Marketing Board / data.gov.in Agmarknet'
+);
+
+CREATE TABLE egg_prices (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  egg_type TEXT NOT NULL, -- white_layer_necc, brown, country, kadaknath, quail, duck
+  price_per_piece NUMERIC(10,2) NOT NULL,
+  rate_date DATE NOT NULL,
+  source TEXT NOT NULL DEFAULT 'NECC (National Egg Coordination Committee) benchmark + market estimate',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE service_categories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  label TEXT NOT NULL,
+  emoji TEXT NOT NULL,
+  description TEXT
+);
+
+CREATE TABLE service_providers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  category_id UUID NOT NULL REFERENCES service_categories(id),
+  name TEXT NOT NULL,
+  description TEXT,
+  phone TEXT,
+  website TEXT,
+  is_verified BOOLEAN NOT NULL DEFAULT false,
+  submitted_by UUID REFERENCES users(id), -- null = seeded by admin, set = a provider self-registered
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE web_stories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  youtube_id TEXT NOT NULL,
+  display_order INT NOT NULL DEFAULT 0
 );
 
 -- Helpful views for the /admin evidence dashboard (task #7 in the plan)

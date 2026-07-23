@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
-import { getDb } from "@/lib/db";
+import { getMandiRates } from "@/lib/mandiRates";
 import { priceRecommendationAgent } from "@/lib/gemini";
 
 const bodySchema = z.object({
@@ -26,25 +26,22 @@ export async function POST(req: NextRequest) {
   }
   const { productName, category } = parsed.data;
 
-  const db = getDb();
-  // mandi_rates is empty until real ingestion is built -- the agent still
-  // works with zero rows, it just falls back to general judgment. Real
-  // mandi-rate ingestion is tracked separately, not built yet.
-  const rates = await db.query(
-    `SELECT rate_date::text AS date, price_per_unit AS "pricePerUnit", market
-     FROM mandi_rates
-     WHERE commodity ILIKE $1
-     ORDER BY rate_date DESC
-     LIMIT 10`,
-    [`%${productName}%`]
-  );
+  // getMandiRates() queries Cloud SQL first and falls back to the seed set
+  // in lib/mandiRates.ts if the DB isn't reachable yet (task #12) or has no
+  // matching rows -- the agent always has real reference numbers to reason
+  // over, not just its own judgment.
+  const rates = await getMandiRates(productName);
 
   try {
     const suggestion = await priceRecommendationAgent({
       farmerId: session.userId,
       productName,
       category,
-      recentMandiRates: rates.rows,
+      recentMandiRates: rates.map((r) => ({
+        date: r.rateDate,
+        pricePerUnit: r.modalPrice,
+        market: r.market,
+      })),
     });
     return NextResponse.json({ suggestion });
   } catch (err) {
