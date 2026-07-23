@@ -60,7 +60,7 @@ const MODEL = "gemini-2.5-flash";
  * required evidence per the XPRIZE rules, not optional telemetry.
  */
 export async function cropAdvisoryAgent(params: {
-  farmerId: string;
+  farmerId: string | null; // null = guest asked without logging in -- Kisan Expert Desk is open to all
   question: string;
   cropContext: string; // e.g. "paddy, Solipeta village, Telangana, kharif season"
 }) {

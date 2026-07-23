@@ -8,7 +8,7 @@ import { getDb } from "./db";
  */
 export async function logAgentDecision(params: {
   agentName: "crop_advisory" | "listing_optimization" | "price_recommendation";
-  farmerId: string;
+  farmerId: string | null; // null = guest asked the crop advisory agent without logging in
   input: Record<string, unknown>;
   output: Record<string, unknown>;
   farmerOverride?: boolean;
