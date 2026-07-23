@@ -6,6 +6,7 @@
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   phone TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL, -- bcrypt, see lib/auth.ts
   full_name TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('farmer', 'consumer', 'provider', 'admin')),
   village TEXT,
